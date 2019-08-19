@@ -7,10 +7,16 @@ from resources.item import Item, ItemList
 
 app = Flask(__name__)
 app.secret_key = '@cc3ss'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
 
 jwt = JWT(app, authenticate, identity) # /auth
+
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
 
 api.add_resource(Item, '/item/<string:name>')
