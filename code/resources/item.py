@@ -7,6 +7,7 @@ from models.item import ItemModel
 class Item(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('price', type=float, required=True, help="This field cannot be left blank")
+    parser.add_argument('storeId', type=int, required=True, help="Store Id field cannot be left blank")
 
     @jwt_required()
     def get(self, name):
@@ -23,7 +24,7 @@ class Item(Resource):
         # this format the data to json format that in case the content type isn't json. This avoid error.
         # data = request.get_json(force=True)
         data = Item.parser.parse_args()
-        item = ItemModel(name, data['price'])
+        item = ItemModel(name, data['price'], data['storeId'])
         try:
             item.save()
         except:
@@ -42,7 +43,7 @@ class Item(Resource):
 
         item = ItemModel.find_by_name(name)
         if item is None:
-            item = ItemModel(name, data['price'])
+            item = ItemModel(name, data['price'], data['storeId'])
         else:
             item.price = data['price']
         item.save()
