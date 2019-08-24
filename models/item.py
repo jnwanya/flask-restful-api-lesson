@@ -15,11 +15,15 @@ class ItemModel(db.Model):
         self.store_id = store_id
 
     def json(self):
-        return {'name': self.name, 'price': self.price}
+        return {'id': self.id, 'name': self.name, 'price': self.price, 'store_id': self.store_id}
 
     @classmethod
     def find_by_name(cls, name):
         return ItemModel.query.filter_by(name=name).first()
+
+    @classmethod
+    def find_all(cls):
+        return ItemModel.query.all()
 
     def save(self):
         db.session.add(self)
